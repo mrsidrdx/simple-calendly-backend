@@ -61,6 +61,13 @@ app.get("/oauth2callback", (req: Request, res: Response, next: NextFunction) => 
   }
 });
 
+app.get("/", (req: Request, res: Response, next: NextFunction) => {
+  res.status(200).json({
+    status: "success",
+    message: "API is running!"
+  });
+});
+
 app.listen(PORT, () => {
   console.log(`Server started on port ${PORT}`);
 });

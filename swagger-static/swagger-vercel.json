@@ -4,7 +4,7 @@
     "version": "1.0.0",
     "title": "Simple Calendly API"
   },
-  "host": "https://simple-calendly-backend.vercel.app",
+  "host": "simple-calendly-backend.vercel.app",
   "basePath": "/",
   "schemes": ["https"],
   "consumes": ["application/json"],
