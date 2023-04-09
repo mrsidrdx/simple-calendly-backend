@@ -9,6 +9,7 @@ To use this app, follow the instructions below:
 1. Clone this repository.
 2. Create a `.env` file and add the following variables:
    - `PORT=3000`
+   - `NODE_ENV=development`
    - `GOOGLE_CLIENT_ID=`
    - `GOOGLE_CLIENT_SECRET=`
 
@@ -37,5 +38,11 @@ do anything else.
 ## Available Meeting Slots
 
 I have randomly picked 10 available meeting slots between 9th April 2023 to 16th April 2023 in advance.
+
+## Production URL
+
+App deployed @Vercel
+Production link : https://simple-calendly-backend.vercel.app/
+Docs link : https://simple-calendly-backend.vercel.app/docs/
 
 Thank you for using this app!
