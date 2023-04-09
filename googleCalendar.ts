@@ -11,7 +11,7 @@ export class GoogleCalendar {
     this.oauth2Client = new google.auth.OAuth2({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      redirectUri: `http://localhost:${process.env.PORT}/oauth2callback`,
+      redirectUri: process.env.NODE_ENV === 'development' ? `http://localhost:${process.env.PORT}/oauth2callback` : 'https://simple-calendly-backend.vercel.app/oauth2callback',
     });
   }
 

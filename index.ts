@@ -5,14 +5,22 @@ const app = express();
 require("dotenv").config();
 const bodyParser = require("body-parser");
 const swaggerUi = require('swagger-ui-express');
-const swaggerDocument = require('./swagger.json');
 
 import { Request, Response, NextFunction } from 'express';
 
 const PORT = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
-app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+if (process.env.NODE_ENV === 'vercel') {
+  const swaggerDocument = require('./swagger-static/swagger-vercel.json');
+  const SWAGGER_CSS_URL =
+  "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui.min.css";
+  app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, { customCssUrl: SWAGGER_CSS_URL }));
+} else {
+  const swaggerDocument = require('./swagger-static/swagger-dev.json');
+  app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+}
 
 const meetingsController = new MeetingsController();
 
