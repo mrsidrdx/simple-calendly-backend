@@ -1,0 +1,713 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Simple Calendly API"
+  },
+  "host": "localhost:3000",
+  "basePath": "/",
+  "schemes": ["http"],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "servers": [
+    {
+      "url": "http://localhost:3000"
+    }
+  ],
+  "paths": {
+    "/initiate-auth": {
+      "get": {
+        "summary": "Initiate OAuth process and get authorization code",
+        "description": "Initiate OAuth process, and get the auth url, open this url in browser, give access to your google account, select all the permissions and submit. It will redirect you to /oauth2callback with authorization code. Now your credentials are authorized, you can use other APIs 👍",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "code": {
+                      "type": "string",
+                      "example": ""
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "example": 400
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "message": {
+                          "type": "string",
+                          "example": ""
+                        },
+                        "errors": {
+                          "type": "array",
+                          "items": {}
+                        },
+                        "issues": {
+                          "type": "array",
+                          "items": {}
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "example": 500
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "message": {
+                          "type": "string",
+                          "example": ""
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/availability": {
+      "get": {
+        "summary": "Get available slots from the host's calendar",
+        "description": "Returns a list of available slots in the specified time range.",
+        "parameters": [
+          {
+            "name": "startDateTime",
+            "in": "query",
+            "required": true,
+            "description": "The start date and time of the search range. Format: `YYYY-MM-DDTHH:mm:ssZ`",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "endDateTime",
+            "in": "query",
+            "required": true,
+            "description": "The end date and time of the search range. Format: `YYYY-MM-DDTHH:mm:ssZ`",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "timeZone",
+            "in": "query",
+            "required": true,
+            "description": "The time zone to use for the search. Example: `Asia/Kolkata`",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "calendarId",
+            "in": "query",
+            "required": true,
+            "description": "The ID of the calendar to search. Example: `primary`",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "example": 200
+                    },
+                    "data": {
+                      "$ref": "#/definitions/AvailabilityResponse"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "example": 400
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "message": {
+                          "type": "string",
+                          "example": ""
+                        },
+                        "errors": {
+                          "type": "array",
+                          "items": {}
+                        },
+                        "issues": {
+                          "type": "array",
+                          "items": {}
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "example": 500
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "message": {
+                          "type": "string",
+                          "example": ""
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/host-meetings": {
+      "get": {
+        "summary": "Get all the scheduled meetings from the host's calendar.",
+        "description": "Returns a list of scheduled meetings from the host's calendar in the specified time range.",
+        "parameters": [
+          {
+            "name": "startDateTime",
+            "in": "query",
+            "description": "Start date and time in RFC3339 format (e.g. '2023-04-08T09:00:00+05:30').",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "endDateTime",
+            "in": "query",
+            "description": "End date and time in RFC3339 format (e.g. '2023-04-08T10:00:00+05:30').",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "calendarId",
+            "in": "query",
+            "description": "ID of the calendar to search for meetings.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "example": 200
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/definitions/ScheduleResponse"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "example": 400
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "message": {
+                          "type": "string",
+                          "example": ""
+                        },
+                        "errors": {
+                          "type": "array",
+                          "items": {}
+                        },
+                        "issues": {
+                          "type": "array",
+                          "items": {}
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "example": 500
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "message": {
+                          "type": "string",
+                          "example": ""
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user-meetings": {
+      "get": {
+        "summary": "Get all the available slots from the non host's calendar.",
+        "description": "Returns a list of scheduled meetings from the non host's calendar in the specified time range.",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "query",
+            "description": "The email address of the non host whose calendar to retrieve events from.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "startDateTime",
+            "in": "query",
+            "description": "The start date and time of the time range to retrieve events from, in ISO format.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "endDateTime",
+            "in": "query",
+            "description": "The end date and time of the time range to retrieve events from, in ISO format.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "calendarId",
+            "in": "query",
+            "description": "The calendar ID to retrieve events from.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response with the array of meeting events.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "example": 200
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/definitions/ScheduleResponse"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "example": 400
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "message": {
+                          "type": "string",
+                          "example": ""
+                        },
+                        "errors": {
+                          "type": "array",
+                          "items": {}
+                        },
+                        "issues": {
+                          "type": "array",
+                          "items": {}
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "example": 500
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "message": {
+                          "type": "string",
+                          "example": ""
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/schedule": {
+      "post": {
+        "summary": "Schedule a meeting with a host",
+        "description": "Schedules a meeting with a host and adds the event to the calendars of both the host and non-host attendees.",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Request body for scheduling calendar",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "calendarId": {
+                  "type": "string",
+                  "description": "Calendar ID",
+                  "required": true
+                },
+                "event": {
+                  "$ref": "#/definitions/CalendarEvent"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The details of the scheduled event.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "example": 200
+                    },
+                    "data": {
+                      "$ref": "#/definitions/ScheduleResponse"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "example": 400
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "message": {
+                          "type": "string",
+                          "example": ""
+                        },
+                        "errors": {
+                          "type": "array",
+                          "items": {}
+                        },
+                        "issues": {
+                          "type": "array",
+                          "items": {}
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "example": 500
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "message": {
+                          "type": "string",
+                          "example": ""
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "AvailabilityResponse": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "start": {
+            "type": "object",
+            "properties": {
+              "dateTime": {
+                "type": "string",
+                "description": "The start date and time of the slot. Format: `YYYY-MM-DDTHH:mm:ssZ`"
+              },
+              "timeZone": {
+                "type": "string",
+                "description": "The time zone of the start time. Example: `Asia/Kolkata`"
+              }
+            }
+          },
+          "end": {
+            "type": "object",
+            "properties": {
+              "dateTime": {
+                "type": "string",
+                "description": "The end date and time of the slot. Format: `YYYY-MM-DDTHH:mm:ssZ`"
+              },
+              "timeZone": {
+                "type": "string",
+                "description": "The time zone of the end time. Example: `Asia/Kolkata`"
+              }
+            }
+          }
+        }
+      }
+    },
+    "ScheduleResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "example": "abcd1234"
+        },
+        "description": {
+          "type": "string",
+          "example": "Weekly team meeting"
+        },
+        "summary": {
+          "type": "string",
+          "example": "Team Meeting"
+        },
+        "startDateTime": {
+          "type": "string",
+          "example": "2023-04-08T09:00:00+05:30"
+        },
+        "endDateTime": {
+          "type": "string",
+          "example": "2023-04-08T10:00:00+05:30"
+        },
+        "attendees": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Attendee"
+          }
+        }
+      }
+    },
+    "CalendarEvent": {
+      "description": "Request body schema for creating a calendar event",
+      "required": ["description", "summary", "start", "end", "attendees", "timeZone"],
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "Description of the calendar event"
+        },
+        "summary": {
+          "type": "string",
+          "description": "Summary of the calendar event",
+          "maxLength": 255
+        },
+        "start": {
+          "type": "object",
+          "required": ["dateTime", "timeZone"],
+          "properties": {
+            "dateTime": {
+              "type": "string",
+              "description": "The start date and time of the event. Format: YYYY-MM-DDTHH:mm:ssZ"
+            },
+            "timeZone": {
+              "type": "string",
+              "description": "The time zone of the start time. Example: Asia/Kolkata"
+            }
+          }
+        },
+        "end": {
+          "type": "object",
+          "required": ["dateTime", "timeZone"],
+          "properties": {
+            "dateTime": {
+              "type": "string",
+              "description": "The end date and time of the event. Format: YYYY-MM-DDTHH:mm:ssZ"
+            },
+            "timeZone": {
+              "type": "string",
+              "description": "The time zone of the end time. Example: Asia/Kolkata"
+            }
+          }
+        },
+        "attendees": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Attendee"
+          },
+          "description": "List of attendees for the calendar event"
+        },
+        "timeZone": {
+          "type": "string",
+          "description": "The time zone of the event. Example: Asia/Kolkata"
+        }
+      }
+    },
+    "Attendee": {
+      "type": "object",
+      "required": ["email", "displayName"],
+      "properties": {
+        "email": {
+          "type": "string",
+          "example": "bithal06@gmail.com"
+        },
+        "displayName": {
+          "type": "string",
+          "example": "Siddhartha Satyakama"
+        }
+      }
+    }
+  }
+}
