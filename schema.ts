@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+// Here are the input validation for request payloads.
+
 const availabilitySchema = z
   .object({
     startDateTime: z

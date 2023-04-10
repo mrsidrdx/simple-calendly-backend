@@ -1,11 +1,11 @@
 // Define the Attendee type
-export interface Attendee {
+interface Attendee {
   email: string;
   displayName: string;
 }
 
 // Define the CalendarEvent type
-export interface CalendarEvent {
+interface CalendarEvent {
   description: string;
   summary: string;
   start: { dateTime: string; timeZone: string };
@@ -15,7 +15,7 @@ export interface CalendarEvent {
 }
 
 // Define the ScheduleResponse type
-export interface ScheduleResponse {
+interface ScheduleResponse {
   id: string;
   description: string;
   summary: string;
@@ -24,7 +24,13 @@ export interface ScheduleResponse {
   attendees: Attendee[];
 }
 
-export interface EventSlot {
+interface EventSlot {
   start: { dateTime: string; timeZone: string };
   end: { dateTime: string; timeZone: string };
+}
+
+export {
+  CalendarEvent,
+  ScheduleResponse,
+  EventSlot
 }
