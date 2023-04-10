@@ -17,6 +17,7 @@
   "paths": {
     "/initiate-auth": {
       "get": {
+        "tags": ["Authorization"],
         "summary": "Initiate OAuth process and get authorization code",
         "description": "Initiate OAuth process, and get the auth url, open this url in browser, give access to your google account, select all the permissions and submit. It will redirect you to /oauth2callback with authorization code. Now your credentials are authorized, you can use other APIs 👍",
         "responses": {
@@ -103,6 +104,7 @@
     },
     "/availability": {
       "get": {
+        "tags": ["Meetings"],
         "summary": "Get available slots from the host's calendar",
         "description": "Returns a list of available slots in the specified time range.",
         "parameters": [
@@ -226,6 +228,7 @@
     },
     "/host-meetings": {
       "get": {
+        "tags": ["Meetings"],
         "summary": "Get all the scheduled meetings from the host's calendar.",
         "description": "Returns a list of scheduled meetings from the host's calendar in the specified time range.",
         "parameters": [
@@ -343,6 +346,7 @@
     },
     "/user-meetings": {
       "get": {
+        "tags": ["Meetings"],
         "summary": "Get all the available slots from the non host's calendar.",
         "description": "Returns a list of scheduled meetings from the non host's calendar in the specified time range.",
         "parameters": [
@@ -469,6 +473,7 @@
     },
     "/schedule": {
       "post": {
+        "tags": ["Meetings"],
         "summary": "Schedule a meeting with a host",
         "description": "Schedules a meeting with a host and adds the event to the calendars of both the host and non-host attendees.",
         "parameters": [
