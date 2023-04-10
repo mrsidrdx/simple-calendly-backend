@@ -37,7 +37,7 @@ do anything else.
 
 ## Available Meeting Slots
 
-I have randomly picked 10 available meeting slots between 9th April 2023 to 16th April 2023 in advance.
+I have randomly picked 10 available meeting slots between 9th April 2023 to 16th April 2023 in advance. You can add/update/remove slots in `utils.ts` file.
 
 ## Production URL
 
